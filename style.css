@@ -1,0 +1,56 @@
+.center {
+    font-family: sans-serif;
+    font-size: 24px;
+    border: 5px solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+  }
+
+  .container {
+    color: #1fc910;
+    font-family: arial;
+    font-size: 24px;
+    margin: 25px;
+    width: 350px;
+    height: 200px;
+    outline: dashed 1px black;
+    /* Setup */
+    position: relative;
+  }
+  
+  .child {
+    color: #1fc910;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    /* Center vertically and horizontally */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -25px 0 0 -25px; /* Apply negative top and left margins to truly center the element */
+  }
+  
+  .collapsible {
+    background-color: #4b2e2e;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  .contentCollapsible {
+    padding: 0 18px;
+    display: none; /* Hidden by default */
+    overflow: hidden;
+    background-color: #f9f9f9;
+    margin-top: 10px;
+  }
+  

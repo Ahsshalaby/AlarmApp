@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productivity App</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Global Styles */
+    #dark-mode {
+    width: 67px; /* Adjust the size as needed */
+    height: auto; /* Maintains aspect ratio */
+    cursor: pointer; /* Changes cursor to indicate it's clickable */
+  }
+
+  /* Optional: Add hover effect for better visual feedback */
+  #dark-mode:hover {
+    opacity: 0.8; /* Slight transparency effect on hover */
+  }
+
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f5f5dc;
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .content {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .container, .container2 {
+      flex: 1;
+      max-width: 550px;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      min-height: 500px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #4b2e2e;
+    }
+    p {
+      text-align: center;
+      color: #333;
+    }
+    #timerSettings {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    #timerSettings select,
+    #timerSettings button {
+      padding: 10px;
+      margin-right: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    #timerSettings button {
+      background-color: #4b2e2e;
+      color: white;
+      cursor: pointer;
+    }
+    #timerSettings button:hover {
+      background-color: #333;
+    }
+    #timerMessage {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+    img#play_pause {
+      margin-top: 20px;
+      cursor: pointer;
+      width: 150px;
+      height: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #play_pause:hover {
+    opacity: 0.8; /* Slight transparency effect on hover */
+  }
+    input#inputText, input#taskDate {
+      padding: 10px;
+      width: 95%;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button.addBtn {
+      padding: 10px 15px;
+      background-color: #4b2e2e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button.addBtn:hover {
+      background-color: #333;
+    }
+    ul#list {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    ul#list li {
+      background-color: #f9f9f9;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: move;
+    }
+    ul#list li:hover {
+      background-color: #eef2f5;
+    }
+    ul#list li button {
+      background-color: transparent;
+      border: none;
+      color: #4b2e2e;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    ul#list li button:hover {
+      color: #333;
+    }
+    /* Add styles for links */
+    a.helpLink {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #4b2e2e;
+      text-decoration: none;
+    }
+    a.helpLink:hover {
+      text-decoration: underline;
+    }
+    #calendarContainer {
+      visibility: hidden;
+      height: 0;
+      margin-top: 20px;
+      transition: visibility 0s, height 0.5s ease-in-out;
+    }
+    #calendarToggle {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    /* Footer styles */
+    footer {
+      width: 100%;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      margin-top: auto;
+    }
+    .footerContainer {
+      background-color: #ffffff;
+      width: 100%;
+    }
+    .socialIcons {
+      display: flex;
+      justify-content: center;
+    }
+    .socialIcons a {
+      text-decoration: none;
+      padding: 10px;
+      background-color: white;
+      margin: 10px;
+      border-radius: 50%;
+    }
+    .socialIcons a i {
+      font-size: 2em;
+      color: #4b2e2e;
+    }
+    .socialIcons a i:hover {
+    opacity: 0.8; /* Slight transparency effect on hover */
+  }
+    .footerNavigation ul {
+      display: flex;
+      justify-content: center;
+      list-style-type: none;
+    }
+    .footerNavigation ul li a {
+      color: #4b2e2e;
+      margin: 20px;
+      text-decoration: none;
+      font-size: 1em;
+    }
+    .footerNavigation ul li a:hover {
+      text-decoration: underline;
+    }
+    .footerBottom {
+      background-color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .headerContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 100px;
+      padding: 10px 100px;
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .appHeader {
+      font-size: 2rem;
+      color: #4b2e2e;
+      font-weight: bold;
+      margin: 0;
+    }
+    
+
+    /* High, Medium, and Low priority task labels */
+    .task-high {
+      border-left: 5px solid #dc3545; /* Red for high priority */
+      padding-left: 10px;
+      background-color: #ffe6e6;
+    }
+
+    .task-medium {
+      border-left: 5px solid #ffc107; /* Yellow for medium priority */
+      padding-left: 10px;
+      background-color: #fff3cd;
+    }
+
+    .task-low {
+      border-left: 5px solid #28a745; /* Green for low priority */
+      padding-left: 10px;
+      background-color: #e6ffe6;
+    }
+
+    /* Base dropdown styling */
+/* Base dropdown styling */
+/* Base dropdown styling */
+#taskPriority {
+  background-color: var(--dropdown-bg-color);
+  color: var(--dropdown-text-color);
+  border: 1px solid var(--dropdown-border-color, #cccccc); /* Ensures visible border in both modes */
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 99%; /* Full width to match input fields */
+  outline: none;
+  appearance: none; /* Remove default dropdown arrow */
+  margin-bottom: 10px; /* Space between dropdown and Add button */
+  box-sizing: border-box; /* Ensures padding doesn’t affect total width */
+  position: relative;
+}
+
+#taskPriority::-ms-expand {
+  display: none; /* Hides the default arrow on Internet Explorer */
+}
+
+/* Custom arrow for dropdown */
+#taskPriority::after {
+  content: '▼';
+  font-size: 12px;
+  color: var(--dropdown-text-color, #333333); /* Arrow color based on mode */
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Prevents arrow from interfering with dropdown functionality */
+}
+
+/* Light mode variables */
+body.light-mode #taskPriority {
+  --dropdown-bg-color: #ffffff;
+  --dropdown-text-color: #333333;
+  --dropdown-border-color: #cccccc; /* Light grey border for visibility */
+  --dropdown-hover-bg-color: #f0f0f0; /* Slightly darker on hover for light mode */
+}
+
+/* Dark mode variables */
+body.dark-mode #taskPriority {
+  --dropdown-bg-color: #333333;
+  --dropdown-text-color: #ffffff;
+  --dropdown-border-color: #444444; /* Darker grey border for dark mode */
+  --dropdown-hover-bg-color: #444444; /* Slightly lighter on hover for dark mode */
+}
+
+/* Hover effect for both modes */
+#taskPriority:hover {
+  background-color: var(--dropdown-hover-bg-color);
+  border-color: var(--dropdown-border-color); /* Keeps border color consistent on hover */
+}
+
+
+@keyframes flash {
+      0% { background-color: #e0ffe0; }
+      100% { background-color: #f9f9f9; }
+    }
+
+    .newTask {
+      animation: flash 20s ease-out;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="headerContainer">
+  <header class="appHeader">Productivity App</header>
+  <img id="dark-mode" src="dark_mode.png" alt="Dark Mode Button" />
+
+</div>
+<script>
+  // Select the image by its ID
+  const darkModeImage = document.getElementById('dark-mode');
+  
+  // Add a click event listener to the image
+  darkModeImage.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode'); // Toggle the 'dark-mode' class on the body
+  });
+</script>
+  <style>
+    body.dark-mode {
+      background-color: #121212;
+    }
+    .dark-mode .container, .dark-mode .container2 {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      border-color: #333;
+    }
+    .dark-mode button, .dark-mode input {
+      background-color: #333;
+      color: #ffffff;
+    }
+    .dark-mode button.addBtn:hover {
+      background-color: black;
+    }
+    .dark-mode h1, .dark-mode h2 {
+      color: #ffffff;
+    }
+    .dark-mode p {
+      color: #eef2f5;
+    }
+   
+    .dark-mode #timerSettings button {
+  
+      background-color: #333;
+    }
+    .dark-mode #timerSettings button:hover {
+      background-color: black;
+    }
+    .dark-mode #timerMessage {
+      color: #eef2f5;
+    }
+    .dark-mode ul#list li {
+      background-color: #333;
+      box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+    }
+    .dark-mode ul#list li:hover {
+      background-color: black;
+    }
+    .dark-mode .headerContainer {
+      background-color: #1e1e1e;
+    }
+    .dark-mode .appHeader {
+      color: #eef2f5;
+    }
+    .dark-mode footer {
+      background-color: #1e1e1e;
+    }
+    .dark-mode .footerContainer {
+      background-color: #1e1e1e;
+    }
+    .dark-mode .socialIcons a {
+      background-color: #1e1e1e;
+    }
+    .dark-mode .socialIcons a i {
+      color: #eef2f5;
+    }
+    .dark-mode .footerNavigation ul li a {
+      color: #ffffff;
+    }
+    .dark-mode .footerBottom {
+      background-color: #1e1e1e;
+    }
+  </style>
+</div>
+
+<div class="main">
+  <div class="content">
+    <div class="container">
+      <h2>Task List</h2>
+      <div class="inputGroup">
+        <input type="text" id="inputText" placeholder="Enter a task">
+        <input type="text" id="taskDate" placeholder="Pick a date for this task">
+        <select id="taskPriority">
+          <option value="high">High Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="low" selected>Low Priority</option>
+        </select>        
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script>
+          flatpickr("#taskDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+              displayTasksForDate(dateStr);
+            }
+          });
+        </script>
+      </div>
+      <button class="addBtn" onclick="newElement()">Add</button>
+      <button id="undoBtn" class="addBtn" style="display: none" onclick="undoDelete()">Undo Last Delete</button>
+      <ul id="list">
+        <!-- Tasks will be added here -->
+      </ul>
+    </div>
+
+    <div class="container2">
+      <h2>Timer</h2>
+      <p>Select timer length and click set timer when you are ready</p>
+
+      <div id="timerSettings">
+        <select id="minutes">
+          <option value="15">Minutes</option>
+          <script>
+            for (let i = 0; i <= 59; i++) {
+              document.write('<option value="' + i + '">' + i + ' min</option>');
+            }
+          </script>
+        </select>
+        <button onclick="setTimer()">Set/Reset Timer</button>
+      </div>
+
+      <h2 id="timerMessage">Make sure notifications are turned on</h2>
+
+      <img id="play_pause" src="green_play.png" alt="Play/Pause" />
+      <audio id="alarmSound" src="Alarm.mp3" preload="auto"></audio>
+      <script src="timer.js"></script>
+
+      <!-- Calendar Toggle Button -->
+      <div id="calendarToggle">
+        <button onclick="toggleCalendar()" class="addBtn">View Task Calendar</button>
+      </div>
+
+      <div id="calendarContainer">
+        <div id="calendar"></div>
+      </div>
+    </div>
+
+    <!-- FullCalendar and Custom Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <!-- Corrected JavaScript Code -->
+    <script>
+      let lastDeletedTask = null; // Variable to store the last deleted task
+      let calendar;
+      let selectedTask;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize calendar
+        initializeCalendar();
+
+        // Load tasks for the currently selected date (if any)
+        const initialDate = document.getElementById('taskDate').value;
+        if (initialDate) {
+          displayTasksForDate(initialDate);
+        }
+      });
+
+      function newElement() {
+        const taskTitle = document.getElementById('inputText').value;
+        const taskDate = document.getElementById('taskDate').value;
+        const taskPriority = document.getElementById('taskPriority').value; // Get priority value
+
+        if (taskTitle && taskDate) {
+          // Save task to localStorage with priority
+          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+          tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority, allDay: true });
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+
+          // Display the new task with flash effect
+          addTaskToList(taskTitle, taskDate, taskPriority);
+
+          // Add task to calendar if it's visible
+          if (calendar) {
+            addTaskToCalendar(taskTitle, taskDate);
+          }
+
+          // Keep inputs after adding a task by commenting out these lines
+          /*
+          document.getElementById('inputText').value = '';
+          document.getElementById('taskDate').value = '';
+          document.getElementById('taskPriority').value = 'low'; // Reset to default if needed
+          */
+        } else {
+          alert("Please enter both a task and a date.");
+        }
+      }
+
+
+      function addTaskToList(title, date, priority) {
+        const li = document.createElement("li");
+        li.textContent = `${title} - ${date}`;
+        
+        // Apply priority class based on selection for each task
+        if (priority === "high") {
+          li.classList.add("task-high");
+        } else if (priority === "medium") {
+          li.classList.add("task-medium");
+        } else {
+          li.classList.add("task-low");
+        }
+
+        // Apply the flash effect only to the new task
+        li.classList.add("newTask");
+        setTimeout(() => {
+          li.classList.remove("newTask");
+        }, 500); // Adjust timing to match the CSS animation duration
+
+        document.getElementById("list").appendChild(li);
+
+        // Add delete button for task
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "✖";
+        deleteBtn.onclick = function () {
+          // Set lastDeletedTask and log it
+          lastDeletedTask = { title, date, element: li };
+          console.log("After setting lastDeletedTask:", lastDeletedTask);
+          li.remove();
+          removeTaskFromCalendar(title, date);
+          removeTaskFromLocalStorage(title, date);
+          showUndoButton();
+        };
+        li.appendChild(deleteBtn);
+      }
+
+
+
+      function showUndoButton() {
+        const undoBtn = document.getElementById("undoBtn");
+        undoBtn.style.display = "inline"; // Show the Undo button
+        setTimeout(() => {
+          undoBtn.style.display = "none"; // Hide the Undo button after 5 seconds
+          lastDeletedTask = null; // Clear the last deleted task after timeout
+        }, 5000);
+      }
+
+      function undoDelete() {
+        console.log("undoDelete called");
+        console.log("lastDeletedTask:", lastDeletedTask);
+
+        if (lastDeletedTask) {
+          const { title, date, element } = lastDeletedTask;
+          console.log(`Restoring task: ${title} - ${date}`);
+
+          // Re-add the task to the list
+          document.getElementById("list").appendChild(element);
+
+          // Add the task back to the calendar
+          addTaskToCalendar(title, date);
+
+          // Restore the task in local storage
+          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+          tasks.push({ title, start: date, allDay: true });
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+
+          // Hide the Undo button and clear the last deleted task
+          document.getElementById("undoBtn").style.display = "none";
+          lastDeletedTask = null;
+        }
+      }
+
+      function addTaskToCalendar(title, date) {
+        if (calendar) {
+          calendar.addEvent({
+            title: title,
+            start: date,
+            allDay: true
+          });
+        }
+      }
+
+      function removeTaskFromCalendar(taskTitle, taskDate) {
+        if (calendar) {
+          const events = calendar.getEvents();
+          events.forEach(event => {
+            if (event.title === taskTitle && event.startStr === taskDate) {
+              event.remove();
+            }
+          });
+        }
+      }
+
+      function removeTaskFromLocalStorage(taskTitle, taskDate) {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const updatedTasks = tasks.filter(task => !(task.title === taskTitle && task.start === taskDate));
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      }
+
+      function displayTasksForDate(date) {
+        // Clear the existing list
+        const listEl = document.getElementById('list');
+        listEl.innerHTML = '';
+
+        // Get tasks from localStorage and filter for the selected date
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const filteredTasks = tasks.filter(task => task.start === date);
+
+        // Add filtered tasks to the list
+        filteredTasks.forEach(task => addTaskToList(task.title, task.start));
+      }
+
+      function initializeCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+          calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: JSON.parse(localStorage.getItem('tasks')) || [],
+            eventClick: function(info) {
+              // Highlight the selected task and store it for timer use
+              selectedTask = info.event;
+              alert(`Task "${info.event.title}" selected. You can now use the timer to complete this task.`);
+            }
+          });
+          calendar.render();
+        }
+      }
+
+      function toggleCalendar() {
+        const calendarContainer = document.getElementById('calendarContainer');
+
+        if (calendarContainer.style.visibility === 'hidden' || calendarContainer.style.visibility === '') {
+          // Show calendar
+          calendarContainer.style.visibility = 'visible';
+          calendarContainer.style.height = 'auto';
+
+          // Initialize or render calendar properly
+          if (!calendar) {
+            initializeCalendar();
+          } else {
+            calendar.render(); // Re-render if already initialized
+          }
+        } else {
+          // Hide calendar
+          calendarContainer.style.visibility = 'hidden';
+          calendarContainer.style.height = '0';
+        }
+      }
+    </script>
+  </div>
+</div>
+
+<footer>
+  <div class="footerContainer">
+    <div class="socialIcons">
+      <a href=""><i class="fa-brands fa-facebook"></i></a>
+      <a href=""><i class="fa-brands fa-instagram"></i></a>
+      <a href=""><i class="fa-brands fa-twitter"></i></a>
+      <a href=""><i class="fa-brands fa-google-plus"></i></a>
+      <a href=""><i class="fa-brands fa-youtube"></i></a>
+    </div>
+    <div class="footerNavigation">
+      <ul>
+        <li><a href="">Contact Us</a></li>
+        <li><a href="">Site Information</a></li>
+        <li><a href="help.html">Need Help?</a></li>
+      </ul>
+      <div class="footerBottom">
+        <p>Designed by <span class="designer">Ahmad Shalaby and George Shields</span></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
