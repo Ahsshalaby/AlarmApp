@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer - Zen Mode</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+  <style>
+    body { font-family: 'Georgia', serif; margin: 0; padding: 0; background-color: #f5f5dc; }
+    .headerContainer, footer { width: 100%; background-color: white; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .breadcrumb { margin: 20px; font-size: 1rem; }
+    .breadcrumb a { text-decoration: none; color: #4b2e2e; }
+    .breadcrumb span { color: #333; }
+    .zenContainer { max-width: 550px; margin: 20px auto; padding: 20px; background-color: #ffffff; border-radius: 6px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); text-align: center; }
+    .dark-mode { background-color: #121212; }
+    .dark-mode .zenContainer, .dark-mode footer { background-color: #1e1e1e; color: white; }
+    #dark-mode { width: 67px; height: auto; cursor: pointer; }
+    select, button { padding: 10px; font-size: 16px; margin: 10px 0; border-radius: 4px; }
+    button { background-color: #4b2e2e; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #6a3d3d; }
+    img { display: block; margin: 20px auto; width: 100px; height: auto; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div>
+    <!-- <h1>Productivity App</h1> -->
+    <img id="dark-mode" src="dark_mode.png" alt="Dark Mode Toggle">
+  </div>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> &gt; <span>Timer</span>
+  </div>
+  <div class="zenContainer">
+    <h2>Timer - Zen Mode</h2>
+    <p>Select timer length and click set timer when you are ready.</p>
+    <div id="timerSettings">
+      <select id="minutes">
+        <option value="15">15 min</option>
+        <option value="30">30 min</option>
+        <option value="45">45 min</option>
+      </select>
+      <button onclick="setTimer()">Set/Reset Timer</button>
+    </div>
+    <img id="play_pause" src="green_play.png" alt="Play/Pause">
+    <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
+    <h3 id="timerMessage">Make sure notifications are turned on.</h3>
+  </div>
+  <script>
+    document.getElementById('dark-mode').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // Timer functionality
+    let timer;
+    function setTimer() {
+      const minutes = parseInt(document.getElementById('minutes').value);
+      const timerMessage = document.getElementById('timerMessage');
+      clearInterval(timer);
+      timerMessage.innerText = `Timer set for ${minutes} minutes.`;
+      timer = setTimeout(() => {
+        timerMessage.innerText = "Time's up!";
+        document.getElementById('alarmSound').play();
+      }, minutes * 60 * 1000);
+    }
+  </script>
+</body>
+</html>

@@ -1,201 +1,145 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Help - Productivity App</title>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f0f4f8;
-      color: #333;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      color: #007bff;
-    }
-
-    p {
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-
-    a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      width: 120px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .back-link:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Help - Productivity App</h1>
-
-    <h2>How to Set a Timer</h2>
-    <p>Select the desired time from the dropdown menus. Once you've selected the time, click the "Set Timer" button. When you're ready to start the timer, click the green "Start" button.</p>
-
-    <h2>How to Add a Task</h2>
-    <p>Enter the task details in the input field below the "Task List" header. You can also choose a date for the task. Once you've entered the details, click the "Add" button, or press the "Enter" key, to add the task to the list.</p>
-
-    <h2>How to View the Task Calendar</h2>
-    <p>You can view your tasks in a calendar format by clicking the "View Task Calendar" link at the bottom of the main page. This will show you all your tasks organized by their assigned dates.</p>
-
-    <h2>Frequently Asked Questions</h2>
-    <p><strong>Q:</strong> How do I delete a task?<br>
-       <strong>A:</strong> To delete a task, click the "X" button next to the task.</p>
-
-    <p><strong>Q:</strong> Can I edit a task?<br>
-       <strong>A:</strong> Currently, tasks cannot be edited once added. You can delete the task and create a new one with the updated details.</p>
-
-    <a href="index.html" class="back-link">Back to App</a>
-  </div>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Help - Productivity App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
   <style>
-    /* Breadcrumb Styles */
-    .breadcrumb {
-      font-size: 14px;
-      margin: 15px 0;
-      padding: 10px 20px;
-      background-color: #333;
-      color: white;
-      border-radius: 4px;
-    }
-    .breadcrumb a {
-      color: #d3d3d3;
-      text-decoration: none;
-    }
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-    .breadcrumb span {
-      color: #ffffff;
-      margin: 0 5px;
-    }
+    /* Global Styles */
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Georgia', serif;
       margin: 0;
-      padding: 20px;
-      background-color: #f0f4f8;
+      padding: 0;
+      background-color: #f5f5dc;
       color: #333;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
+    /* Header Styling */
+    .headerContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 20px;
-      border-radius: 8px;
+      background-color: white;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
+    .headerContainer h1 {
+      font-size: 1.8rem;
+      color: #4b2e2e;
+      margin: 0;
     }
 
-    h2 {
-      color: #007bff;
+    #dark-mode {
+      width: 67px;
+      height: auto;
+      cursor: pointer;
     }
 
-    p {
-      line-height: 1.6;
-      margin-bottom: 15px;
+    /* Breadcrumb Styling */
+    #breadcrumb {
+      background-color: #4b2e2e;
+      color: white;
+      padding: 10px 20px;
     }
 
-    a {
-      color: #007bff;
+    #breadcrumb a {
+      color: white;
       text-decoration: none;
     }
 
-    a:hover {
+    #breadcrumb a:hover {
       text-decoration: underline;
     }
 
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
+    /* Content Styling */
+    .helpContainer {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .helpContainer h2 {
+      color: #4b2e2e;
+      margin-bottom: 10px;
+    }
+
+    .helpContainer p, .helpContainer li {
+      margin-bottom: 15px;
+    }
+
+    .helpContainer a {
+      color: #4b2e2e;
+      text-decoration: underline;
+    }
+
+    .helpContainer a:hover {
       text-decoration: none;
-      width: 120px;
-      margin-left: auto;
-      margin-right: auto;
+      color: #6a3d3d;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: white;
+    }
+
+    body.dark-mode .headerContainer {
+      background-color: #1e1e1e;
+    }
+
+    body.dark-mode #breadcrumb {
+      background-color: #333;
+    }
+
+    body.dark-mode .helpContainer {
+      background-color: #1e1e1e;
+      color: white;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <div class="headerContainer">
+    <h1>Productivity App</h1>
+    <img id="dark-mode" src="dark_mode.png" alt="Dark Mode Toggle">
+  </div>
 
-<div class="breadcrumb">
-  <a href="index.html">Home</a> <span>&gt;</span> Help
-</div>
+  <!-- Breadcrumb -->
+  <div id="breadcrumb">
+    <a href="index.html">Home</a> &gt; <span>Help</span>
+  </div>
 
-<h1>Help Page</h1>
-<p>This is the help section for the Productivity App. Here you can find information on how to use various features of the app.</p>
+  <!-- Help Content -->
+  <div class="helpContainer">
+    <h2>Help Page</h2>
+    <p>This is the help section for the Productivity App. Here you can find information on how to use various features of the app.</p>
 
-<!-- Additional help content goes here -->
-<h2>How to Set a Timer</h2>
-<p>Select the desired time from the dropdown menus. Once you've selected the time, click the "Set Timer" button. When you're ready to start the timer, click the green "Start" button.</p>
+    <h3>How to Set a Timer</h3>
+    <p>Select the desired time from the dropdown menus. Once you've selected the time, click the "Set Timer" button. When you're ready to start the timer, click the green "Start" button.</p>
 
-<h2>How to Add a Task</h2>
-<p>Enter the task details in the input field below the "Task List" header. You can also choose a date for the task. Once you've entered the details, click the "Add" button, or press the "Enter" key, to add the task to the list.</p>
+    <h3>How to Add a Task</h3>
+    <p>Enter the task details in the input field below the "Task List" header. You can also choose a date for the task. Once you've entered the details, click the "Add" button, or press the "Enter" key, to add the task to the list.</p>
 
-<h2>How to View the Task Calendar</h2>
-<p>You can view your tasks in a calendar format by clicking the "View Task Calendar" link at the bottom of the main page. This will show you all your tasks organized by their assigned dates.</p>
+    <h3>How to View the Task Calendar</h3>
+    <p>You can view your tasks in a calendar format by clicking the "View Task Calendar" link at the bottom of the main page. This will show you all your tasks organized by their assigned dates.</p>
 
-<h2>Frequently Asked Questions</h2>
-<p><strong>Q:</strong> How do I delete a task?<br>
-   <strong>A:</strong> To delete a task, click the "X" button next to the task.</p>
+    <h3>Frequently Asked Questions</h3>
+    <ul>
+      <li><strong>Q: How do I delete a task?</strong><br>A: To delete a task, click the "X" button next to the task.</li>
+      <li><strong>Q: Can I edit a task?</strong><br>A: Currently, tasks cannot be edited once added. You can delete the task and create a new one with the updated details.</li>
+    </ul>
+  </div>
 
-<p><strong>Q:</strong> Can I edit a task?<br>
-   <strong>A:</strong> Currently, tasks cannot be edited once added. You can delete the task and create a new one with the updated details.</p>
-
+  <!-- Dark Mode Script -->
+  <script>
+    document.getElementById('dark-mode').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
 </body>
 </html>

@@ -178,54 +178,112 @@
       justify-content: center;
     }
     /* Footer styles */
-    footer {
-      width: 100%;
-      color: #fff;
-      text-align: center;
-      padding: 5px;
-      margin-top: auto;
-    }
-    .footerContainer {
-      background-color: #ffffff;
-      width: 100%;
-    }
-    .socialIcons {
-      display: flex;
-      justify-content: center;
-    }
-    .socialIcons a {
-      text-decoration: none;
-      padding: 10px;
-      background-color: white;
-      margin: 10px;
-      border-radius: 50%;
-    }
-    .socialIcons a i {
-      font-size: 2em;
-      color: #4b2e2e;
-    }
-    .socialIcons a i:hover {
-    opacity: 0.8; /* Slight transparency effect on hover */
-  }
-    .footerNavigation ul {
-      display: flex;
-      justify-content: center;
-      list-style-type: none;
-    }
-    .footerNavigation ul li a {
-      color: #4b2e2e;
-      margin: 20px;
-      text-decoration: none;
-      font-size: 1em;
-    }
-    .footerNavigation ul li a:hover {
-      text-decoration: underline;
-    }
-    .footerBottom {
-      background-color: white;
-      padding: 20px;
-      text-align: center;
-    }
+/* General Footer Styling */
+/* General Footer Styling */
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme changes */
+}
+
+/* Light Mode Footer */
+body.light-mode footer {
+  background-color: #f5f5f5; /* Light background for footer */
+  color: #333; /* Dark text for readability */
+}
+
+body.light-mode .socialIcons a {
+  background-color: #e0e0e0;
+  color: #333; /* Darker icon color in light mode */
+}
+
+body.light-mode .socialIcons a:hover {
+  background-color: #d6d6d6; /* Subtle hover effect for light mode */
+}
+
+body.light-mode .footerNavigation ul li a {
+  color: #4b2e2e; /* Consistent text color for light mode */
+}
+
+body.light-mode .footerBottom {
+  color: #666; /* Subtle footer credits */
+}
+
+/* Dark Mode Footer */
+body.dark-mode footer {
+  background-color: #121212; /* Match dark mode background */
+  color: #eaeaea; /* Light text for contrast */
+}
+
+body.dark-mode .socialIcons a {
+  background-color: #1e1e1e; /* Slightly lighter for distinction */
+  color: #eaeaea; /* Light icon color in dark mode */
+}
+
+body.dark-mode .socialIcons a:hover {
+  background-color: #333; /* Slightly brighter hover effect */
+}
+
+body.dark-mode .footerNavigation ul li a {
+  color: #eaeaea; /* White text for navigation links */
+}
+
+body.dark-mode .footerBottom {
+  color: #b5b5b5; /* Subtle footer credits for dark mode */
+}
+
+/* Shared Footer Styles */
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 15px;
+}
+
+.socialIcons a {
+  text-decoration: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.socialIcons a i {
+  font-size: 1.5rem;
+}
+
+.footerNavigation ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.footerNavigation ul li a {
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.footerBottom {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+
+
     .headerContainer {
       display: flex;
       justify-content: space-between;
@@ -242,6 +300,21 @@
       margin: 0;
     }
     
+    /* Style for calendar events */
+.fc-event-title {
+    display: flex;
+    align-items: center; /* Align the tag and title text */
+    gap: 5px; /* Space between tag and text */
+}
+
+.fc-event {
+    /* background-color: white; Keep the event background neutral */
+    color: #333; /* Ensure the event text is readable */
+    /* border: 1px solid #ddd; Optional: Add a border for better visibility */
+    border-radius: 4px;
+    padding: 2px 5px;
+}
+
 
     /* High, Medium, and Low priority task labels */
     .task-high {
@@ -411,16 +484,61 @@ body.dark-mode #taskPriority {
     .dark-mode .footerBottom {
       background-color: #1e1e1e;
     }
+
+    .zenButtons {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* Space between buttons */
+      margin-top: 15px;
+    }
+
+    .required {
+      color: #dc3545; /* Red to indicate importance */
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .inputGroup label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #4b2e2e;
+    }
+
+    body.dark-mode .inputGroup label {
+      color: white;
+    }
+
+    body.dark-mode .required {
+      color: #dc3545; /* Keep the asterisk red for emphasis */
+    }
+
+
+
   </style>
 </div>
+
+<div id="zenModes">
+  <div class="zenButtons">
+    <h2>Zen Modes: </h2>
+    <button onclick="location.href='tasklist.html'" class="addBtn">Task List</button>
+    <button onclick="location.href='timer.html'" class="addBtn">Timer</button>
+    <!-- <button onclick="location.href='calendar.html'" class="addBtn">Calendar</button> -->
+  </div>
+</div>
+
+
 
 <div class="main">
   <div class="content">
     <div class="container">
       <h2>Task List</h2>
       <div class="inputGroup">
+        <label for="inputText">Task Name <span class="required">*</span></label>
         <input type="text" id="inputText" placeholder="Enter a task">
+        <label for="taskDate">Task Date <span class="required">*</span></label>
         <input type="text" id="taskDate" placeholder="Pick a date for this task">
+        <label for="taskPriority">Priority</label>
         <select id="taskPriority">
           <option value="high">High Priority</option>
           <option value="medium">Medium Priority</option>
@@ -478,7 +596,6 @@ body.dark-mode #taskPriority {
 
     <!-- FullCalendar and Custom Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-    <!-- Corrected JavaScript Code -->
     <script>
       let lastDeletedTask = null; // Variable to store the last deleted task
       let calendar;
@@ -496,34 +613,28 @@ body.dark-mode #taskPriority {
       });
 
       function newElement() {
-        const taskTitle = document.getElementById('inputText').value;
-        const taskDate = document.getElementById('taskDate').value;
-        const taskPriority = document.getElementById('taskPriority').value; // Get priority value
+    const taskTitle = document.getElementById('inputText').value;
+    const taskDate = document.getElementById('taskDate').value;
+    const taskPriority = document.getElementById('taskPriority').value;
 
-        if (taskTitle && taskDate) {
-          // Save task to localStorage with priority
-          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-          tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority, allDay: true });
-          localStorage.setItem('tasks', JSON.stringify(tasks));
+    if (taskTitle && taskDate) {
+        // Save task to localStorage with priority
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority });
+        localStorage.setItem('tasks', JSON.stringify(tasks));
 
-          // Display the new task with flash effect
-          addTaskToList(taskTitle, taskDate, taskPriority);
+        // Add task to the list
+        addTaskToList(taskTitle, taskDate, taskPriority);
 
-          // Add task to calendar if it's visible
-          if (calendar) {
-            addTaskToCalendar(taskTitle, taskDate);
-          }
-
-          // Keep inputs after adding a task by commenting out these lines
-          /*
-          document.getElementById('inputText').value = '';
-          document.getElementById('taskDate').value = '';
-          document.getElementById('taskPriority').value = 'low'; // Reset to default if needed
-          */
-        } else {
-          alert("Please enter both a task and a date.");
+        // Refresh the calendar to show the new task
+        if (calendar) {
+            calendar.refetchEvents(); // Reload all events, including the new one
         }
-      }
+    } else {
+        alert("Please enter both a task and a date.");
+    }
+}
+
 
 
       function addTaskToList(title, date, priority) {
@@ -638,21 +749,57 @@ body.dark-mode #taskPriority {
         filteredTasks.forEach(task => addTaskToList(task.title, task.start));
       }
 
+      // Initialize Calendar with Event Colors
       function initializeCalendar() {
-        const calendarEl = document.getElementById('calendar');
-        if (calendarEl) {
-          calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            events: JSON.parse(localStorage.getItem('tasks')) || [],
-            eventClick: function(info) {
-              // Highlight the selected task and store it for timer use
-              selectedTask = info.event;
-              alert(`Task "${info.event.title}" selected. You can now use the timer to complete this task.`);
-            }
-          });
-          calendar.render();
-        }
-      }
+            events: function(fetchInfo, successCallback, failureCallback) {
+                // Load events from localStorage
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                successCallback(tasks);
+            },
+            eventContent: function(info) {
+                // Create custom event content with priority tags
+                let eventEl = document.createElement('div');
+                eventEl.style.display = 'flex';
+                eventEl.style.alignItems = 'center';
+
+                // Priority indicator (colored dot)
+                let priorityIndicator = document.createElement('span');
+                priorityIndicator.style.display = 'inline-block';
+                priorityIndicator.style.width = '10px';
+                priorityIndicator.style.height = '10px';
+                priorityIndicator.style.borderRadius = '50%';
+                priorityIndicator.style.marginRight = '5px';
+
+                // Set color based on priority
+                if (info.event.extendedProps.priority === 'high') {
+                    priorityIndicator.style.backgroundColor = '#dc3545'; // Red
+                } else if (info.event.extendedProps.priority === 'medium') {
+                    priorityIndicator.style.backgroundColor = '#ffc107'; // Yellow
+                } else if (info.event.extendedProps.priority === 'low') {
+                    priorityIndicator.style.backgroundColor = '#28a745'; // Green
+                }
+
+                // Event title
+                let titleEl = document.createElement('span');
+                titleEl.innerText = info.event.title;
+                titleEl.style.color = 'inherit'; // Keep the default text color
+
+                // Append the indicator and title
+                eventEl.appendChild(priorityIndicator);
+                eventEl.appendChild(titleEl);
+
+                return { domNodes: [eventEl] };
+            },
+        });
+
+        calendar.render();
+    }
+}
+
 
       function toggleCalendar() {
         const calendarContainer = document.getElementById('calendarContainer');
@@ -680,25 +827,32 @@ body.dark-mode #taskPriority {
 
 <footer>
   <div class="footerContainer">
+    <!-- Social Icons -->
     <div class="socialIcons">
-      <a href=""><i class="fa-brands fa-facebook"></i></a>
-      <a href=""><i class="fa-brands fa-instagram"></i></a>
-      <a href=""><i class="fa-brands fa-twitter"></i></a>
-      <a href=""><i class="fa-brands fa-google-plus"></i></a>
-      <a href=""><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-twitter"></i></a>
+      <a href="#"><i class="fa-brands fa-google-plus"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
     </div>
+
+    <!-- Navigation Links -->
     <div class="footerNavigation">
       <ul>
-        <li><a href="">Contact Us</a></li>
-        <li><a href="">Site Information</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Site Information</a></li>
         <li><a href="help.html">Need Help?</a></li>
       </ul>
-      <div class="footerBottom">
-        <p>Designed by <span class="designer">Ahmad Shalaby and George Shields</span></p>
-      </div>
+    </div>
+
+    <!-- Credits -->
+    <div class="footerBottom">
+      <p>Designed by <span class="designer">Ahmad Shalaby and George Shields</span></p>
     </div>
   </div>
 </footer>
+
+
 
 </body>
 </html>

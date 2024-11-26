@@ -17,7 +17,7 @@
     width: 350px;
     height: 200px;
     outline: dashed 1px black;
-    /* Setup */
+  
     position: relative;
   }
   
@@ -26,11 +26,11 @@
     width: 50px;
     height: 50px;
     background-color: red;
-    /* Center vertically and horizontally */
+
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -25px 0 0 -25px; /* Apply negative top and left margins to truly center the element */
+    margin: -25px 0 0 -25px; 
   }
   
   .collapsible {
@@ -48,9 +48,62 @@
   
   .contentCollapsible {
     padding: 0 18px;
-    display: none; /* Hidden by default */
+    display: none; 
     overflow: hidden;
     background-color: #f9f9f9;
     margin-top: 10px;
+  }
+
+  /* Breadcrumb Styling */
+  #breadcrumb {
+    margin: 20px;
+    font-size: 1rem;
+  }
+  
+  #breadcrumb a {
+    text-decoration: none;
+    color: #4b2e2e;
+    padding: 5px;
+  }
+  
+  #breadcrumb a:hover {
+    text-decoration: underline;
+  }
+  
+  #breadcrumb span {
+    color: #333;
+  }
+
+  .zenContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1e1e1e; /* Matches dark mode */
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .zenContainer h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .zenContainer p {
+    font-size: 1.2rem;
+  }
+  
+  body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .zenContainer {
+    background-color: #1e1e1e;
+  }
+  
+  body.dark-mode #breadcrumb a {
+    color: #fff;
   }
   

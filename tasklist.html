@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List - Zen Mode</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    body { font-family: 'Georgia', serif; margin: 0; padding: 0; background-color: #f5f5dc; }
+    .headerContainer { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .breadcrumb { margin: 20px; font-size: 1rem; }
+    .breadcrumb a { text-decoration: none; color: #4b2e2e; }
+    .breadcrumb span { color: #333; }
+    .zenContainer { max-width: 550px; margin: 20px auto; padding: 20px; background-color: #ffffff; border-radius: 6px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    #dark-mode { width: 67px; height: auto; cursor: pointer; }
+    input, select, button { padding: 10px; margin-bottom: 10px; border-radius: 4px; font-size: 1rem; width: 100%; box-sizing: border-box; }
+    button { background-color: #4b2e2e; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #6a3d3d; }
+    ul#list { list-style: none; padding: 0; margin-top: 20px; max-height: 400px; overflow-y: auto; }
+    ul#list li { padding: 10px; margin: 10px 0; background-color: #f9f9f9; border-radius: 4px; display: flex; justify-content: space-between; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+    ul#list li:hover { background-color: #eef2f5; }
+    ul#list li button { background: none; border: none; color: #4b2e2e; cursor: pointer; font-size: 1.2rem; }
+    ul#list li button:hover { color: #6a3d3d; }
+    .dark-mode { background-color: #121212; color: white; }
+    .dark-mode .zenContainer, .dark-mode ul#list li { background-color: #1e1e1e; color: white; }
+    .dark-mode input, .dark-mode select, .dark-mode button { background-color: #333; color: white; border: none; }
+    img { display: block; margin: 20px auto; width: 100px; height: auto; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div >
+    <!-- <header>Productivity App</header> -->
+    <img id="dark-mode" src="dark_mode.png" alt="Dark Mode Toggle">
+  </div>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> &gt; <span>Task List</span>
+  </div>
+  <div class="zenContainer">
+    <h2>Task List - Zen Mode</h2>
+    <div class="inputGroup">
+      <input type="text" id="inputText" placeholder="Enter a task">
+      <input type="text" id="taskDate" placeholder="Pick a date for this task">
+      <select id="taskPriority">
+        <option value="high">High Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="low" selected>Low Priority</option>
+      </select>
+    </div>
+    <button onclick="newElement()">Add</button>
+    <ul id="list"></ul>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#taskDate", { dateFormat: "Y-m-d", minDate: "today" });
+
+    document.getElementById('dark-mode').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // Add task management logic here
+
+      let lastDeletedTask = null; // Variable to store the last deleted task
+      let calendar;
+      let selectedTask;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize calendar
+        initializeCalendar();
+
+        // Load tasks for the currently selected date (if any)
+        const initialDate = document.getElementById('taskDate').value;
+        if (initialDate) {
+          displayTasksForDate(initialDate);
+        }
+      });
+
+      function newElement() {
+    const taskTitle = document.getElementById('inputText').value;
+    const taskDate = document.getElementById('taskDate').value;
+    const taskPriority = document.getElementById('taskPriority').value;
+
+    if (taskTitle && taskDate) {
+        // Save task to localStorage with priority
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority });
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+
+        // Add task to the list
+        addTaskToList(taskTitle, taskDate, taskPriority);
+
+        // Refresh the calendar to show the new task
+        if (calendar) {
+            calendar.refetchEvents(); // Reload all events, including the new one
+        }
+    } else {
+        alert("Please enter both a task and a date.");
+    }
+}
+
+
+
+      function addTaskToList(title, date, priority) {
+        const li = document.createElement("li");
+        li.textContent = `${title} - ${date}`;
+        
+        // Apply priority class based on selection for each task
+        if (priority === "high") {
+          li.classList.add("task-high");
+        } else if (priority === "medium") {
+          li.classList.add("task-medium");
+        } else {
+          li.classList.add("task-low");
+        }
+
+        // Apply the flash effect only to the new task
+        li.classList.add("newTask");
+        setTimeout(() => {
+          li.classList.remove("newTask");
+        }, 500); // Adjust timing to match the CSS animation duration
+
+        document.getElementById("list").appendChild(li);
+
+        // Add delete button for task
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "✖";
+        deleteBtn.onclick = function () {
+          // Set lastDeletedTask and log it
+          lastDeletedTask = { title, date, element: li };
+          console.log("After setting lastDeletedTask:", lastDeletedTask);
+          li.remove();
+          removeTaskFromCalendar(title, date);
+          removeTaskFromLocalStorage(title, date);
+          showUndoButton();
+        };
+        li.appendChild(deleteBtn);
+      }
+
+
+
+      function showUndoButton() {
+        const undoBtn = document.getElementById("undoBtn");
+        undoBtn.style.display = "inline"; // Show the Undo button
+        setTimeout(() => {
+          undoBtn.style.display = "none"; // Hide the Undo button after 5 seconds
+          lastDeletedTask = null; // Clear the last deleted task after timeout
+        }, 5000);
+      }
+
+      function undoDelete() {
+        console.log("undoDelete called");
+        console.log("lastDeletedTask:", lastDeletedTask);
+
+        if (lastDeletedTask) {
+          const { title, date, element } = lastDeletedTask;
+          console.log(`Restoring task: ${title} - ${date}`);
+
+          // Re-add the task to the list
+          document.getElementById("list").appendChild(element);
+
+          // Add the task back to the calendar
+          addTaskToCalendar(title, date);
+
+          // Restore the task in local storage
+          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+          tasks.push({ title, start: date, allDay: true });
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+
+          // Hide the Undo button and clear the last deleted task
+          document.getElementById("undoBtn").style.display = "none";
+          lastDeletedTask = null;
+        }
+      }
+
+      function addTaskToCalendar(title, date) {
+        if (calendar) {
+          calendar.addEvent({
+            title: title,
+            start: date,
+            allDay: true
+          });
+        }
+      }
+
+      function removeTaskFromCalendar(taskTitle, taskDate) {
+        if (calendar) {
+          const events = calendar.getEvents();
+          events.forEach(event => {
+            if (event.title === taskTitle && event.startStr === taskDate) {
+              event.remove();
+            }
+          });
+        }
+      }
+
+      function removeTaskFromLocalStorage(taskTitle, taskDate) {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const updatedTasks = tasks.filter(task => !(task.title === taskTitle && task.start === taskDate));
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      }
+
+      function displayTasksForDate(date) {
+        // Clear the existing list
+        const listEl = document.getElementById('list');
+        listEl.innerHTML = '';
+
+        // Get tasks from localStorage and filter for the selected date
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const filteredTasks = tasks.filter(task => task.start === date);
+
+        // Add filtered tasks to the list
+        filteredTasks.forEach(task => addTaskToList(task.title, task.start));
+      }
+
+      // Initialize Calendar with Event Colors
+      function initializeCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: function(fetchInfo, successCallback, failureCallback) {
+                // Load events from localStorage
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                successCallback(tasks);
+            },
+            eventContent: function(info) {
+                // Create custom event content with priority tags
+                let eventEl = document.createElement('div');
+                eventEl.style.display = 'flex';
+                eventEl.style.alignItems = 'center';
+
+                // Priority indicator (colored dot)
+                let priorityIndicator = document.createElement('span');
+                priorityIndicator.style.display = 'inline-block';
+                priorityIndicator.style.width = '10px';
+                priorityIndicator.style.height = '10px';
+                priorityIndicator.style.borderRadius = '50%';
+                priorityIndicator.style.marginRight = '5px';
+
+                // Set color based on priority
+                if (info.event.extendedProps.priority === 'high') {
+                    priorityIndicator.style.backgroundColor = '#dc3545'; // Red
+                } else if (info.event.extendedProps.priority === 'medium') {
+                    priorityIndicator.style.backgroundColor = '#ffc107'; // Yellow
+                } else if (info.event.extendedProps.priority === 'low') {
+                    priorityIndicator.style.backgroundColor = '#28a745'; // Green
+                }
+
+                // Event title
+                let titleEl = document.createElement('span');
+                titleEl.innerText = info.event.title;
+                titleEl.style.color = 'inherit'; // Keep the default text color
+
+                // Append the indicator and title
+                eventEl.appendChild(priorityIndicator);
+                eventEl.appendChild(titleEl);
+
+                return { domNodes: [eventEl] };
+            },
+        });
+
+        calendar.render();
+    }
+}
+
+
+      function toggleCalendar() {
+        const calendarContainer = document.getElementById('calendarContainer');
+
+        if (calendarContainer.style.visibility === 'hidden' || calendarContainer.style.visibility === '') {
+          // Show calendar
+          calendarContainer.style.visibility = 'visible';
+          calendarContainer.style.height = 'auto';
+
+          // Initialize or render calendar properly
+          if (!calendar) {
+            initializeCalendar();
+          } else {
+            calendar.render(); // Re-render if already initialized
+          }
+        } else {
+          // Hide calendar
+          calendarContainer.style.visibility = 'hidden';
+          calendarContainer.style.height = '0';
+        }
+      }
+   
+
+
+  </script>
+</body>
+</html>

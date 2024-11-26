@@ -3,39 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Calendar</title>
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+  <title>Calendar - Zen Mode</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f4f8;
-    }
-    .container {
-      width: 100%;
-      max-width: 800px;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    #calendar {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    body { font-family: 'Georgia', serif; margin: 0; padding: 0; background-color: #f5f5dc; }
+    .headerContainer, footer { width: 100%; background-color: white; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .breadcrumb { margin: 20px; font-size: 1rem; }
+    .breadcrumb a { text-decoration: none; color: #4b2e2e; }
+    .breadcrumb span { color: #333; }
+    .zenContainer { margin: 20px; }
+    .calendar { max-width: 900px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 6px; }
+    .dark-mode { background-color: #121212; }
+    .dark-mode .calendar, .dark-mode footer { background-color: #1e1e1e; color: white; }
+    #dark-mode { width: 67px; height: auto; cursor: pointer; }
   </style>
 </head>
-<body> 
-
-  <!-- FullCalendar JS -->
+<body>
+  <div class="headerContainer">
+    <h1>Productivity App</h1>
+    <img id="dark-mode" src="dark_mode.png" alt="Dark Mode Toggle">
+  </div>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> &gt; <span>Calendar</span>
+  </div>
+  <div class="calendar" id="calendarContainer">
+    <div id="calendar"></div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-  <!-- Custom calendar script -->
-  <script src="calendar.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: JSON.parse(localStorage.getItem('tasks')) || [],
+      });
+      calendar.render();
+    });
+    document.getElementById('dark-mode').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    function initializeCalendar() {
+  const calendarEl = document.getElementById('calendar');
+  if (calendarEl) {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: function(fetchInfo, successCallback, failureCallback) {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        successCallback(tasks);
+      },
+    });
+    calendar.render();
+  }
+}
+
+
+  function newElement() {
+  const taskTitle = document.getElementById('inputText').value;
+  const taskDate = document.getElementById('taskDate').value;
+  const taskPriority = document.getElementById('taskPriority').value;
+
+  if (taskTitle && taskDate) {
+    // Save task to localStorage
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    // Reload calendar events dynamically
+    if (typeof calendar !== "undefined") {
+      calendar.refetchEvents();
+    }
+  } else {
+    alert("Please enter both a task and a date.");
+  }
+}
+
+  </script>
 </body>
 </html>
