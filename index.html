@@ -211,6 +211,8 @@ body.light-mode .footerBottom {
   color: #666; /* Subtle footer credits */
 }
 
+
+
 /* Dark Mode Footer */
 body.dark-mode footer {
   background-color: #121212; /* Match dark mode background */
@@ -244,7 +246,7 @@ body.dark-mode .footerBottom {
   gap: 20px;
 }
 
-.socialIcons {
+/* .socialIcons {
   display: flex;
   gap: 15px;
 }
@@ -262,20 +264,43 @@ body.dark-mode .footerBottom {
 
 .socialIcons a i {
   font-size: 1.5rem;
-}
+} */
+
+.socialIcons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .socialIcons a {
+      text-decoration: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    .socialIcons a i {
+      font-size: 1.5rem;
+    }
 
 .footerNavigation ul {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-}
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      padding: 0;
+    }
 
-.footerNavigation ul li a {
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s;
-}
+    .footerNavigation ul li a {
+      text-decoration: none;
+      font-size: 1rem;
+      color: #4b2e2e;
+      transition: color 0.3s;
+    }
 
 .footerBottom {
   font-size: 0.9rem;
@@ -849,7 +874,7 @@ body.dark-mode #taskPriority {
     </div>
 
     <!-- Credits -->
-    <div class="footerBottom">
+    <div class="footerNavigation">
       <p>Designed by <span class="designer">Ahmad Shalaby and George Shields</span></p>
     </div>
   </div>
