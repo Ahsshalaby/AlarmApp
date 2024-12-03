@@ -597,15 +597,13 @@ body.dark-mode #taskPriority {
     <!-- FullCalendar and Custom Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <script>
-      let lastDeletedTask = null; // Variable to store the last deleted task
+      let lastDeletedTask = null;
       let calendar;
       let selectedTask;
 
       document.addEventListener('DOMContentLoaded', function () {
-        // Initialize calendar
         initializeCalendar();
 
-        // Load tasks for the currently selected date (if any)
         const initialDate = document.getElementById('taskDate').value;
         if (initialDate) {
           displayTasksForDate(initialDate);
@@ -613,34 +611,32 @@ body.dark-mode #taskPriority {
       });
 
       function newElement() {
-    const taskTitle = document.getElementById('inputText').value;
-    const taskDate = document.getElementById('taskDate').value;
-    const taskPriority = document.getElementById('taskPriority').value;
+        const taskTitle = document.getElementById('inputText').value;
+        const taskDate = document.getElementById('taskDate').value;
+        const taskPriority = document.getElementById('taskPriority').value;
 
-    if (taskTitle && taskDate) {
-        // Save task to localStorage with priority
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        if (taskTitle && taskDate) {
+          // Save task to localStorage with priority
+          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+          tasks.push({ title: taskTitle, start: taskDate, priority: taskPriority });
+          localStorage.setItem('tasks', JSON.stringify(tasks));
 
-        // Add task to the list
-        addTaskToList(taskTitle, taskDate, taskPriority);
+          // Add task to the list
+          addTaskToList(taskTitle, taskDate, taskPriority);
 
-        // Refresh the calendar to show the new task
-        if (calendar) {
-            calendar.refetchEvents(); // Reload all events, including the new one
+          // Refresh the calendar to show the new task
+          if (calendar) {
+            calendar.refetchEvents();
+          }
+        } else {
+          alert("Please enter both a task and a date.");
         }
-    } else {
-        alert("Please enter both a task and a date.");
-    }
-}
-
-
+      }
 
       function addTaskToList(title, date, priority) {
         const li = document.createElement("li");
         li.textContent = `${title} - ${date}`;
-        
+
         // Apply priority class based on selection for each task
         if (priority === "high") {
           li.classList.add("task-high");
@@ -654,7 +650,7 @@ body.dark-mode #taskPriority {
         li.classList.add("newTask");
         setTimeout(() => {
           li.classList.remove("newTask");
-        }, 500); // Adjust timing to match the CSS animation duration
+        }, 500);
 
         document.getElementById("list").appendChild(li);
 
@@ -662,9 +658,7 @@ body.dark-mode #taskPriority {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "✖";
         deleteBtn.onclick = function () {
-          // Set lastDeletedTask and log it
-          lastDeletedTask = { title, date, element: li };
-          console.log("After setting lastDeletedTask:", lastDeletedTask);
+          lastDeletedTask = { title, date, priority, element: li };
           li.remove();
           removeTaskFromCalendar(title, date);
           removeTaskFromLocalStorage(title, date);
@@ -673,34 +667,28 @@ body.dark-mode #taskPriority {
         li.appendChild(deleteBtn);
       }
 
-
-
       function showUndoButton() {
         const undoBtn = document.getElementById("undoBtn");
-        undoBtn.style.display = "inline"; // Show the Undo button
+        undoBtn.style.display = "inline";
         setTimeout(() => {
-          undoBtn.style.display = "none"; // Hide the Undo button after 5 seconds
-          lastDeletedTask = null; // Clear the last deleted task after timeout
+          undoBtn.style.display = "none";
+          lastDeletedTask = null;
         }, 5000);
       }
 
       function undoDelete() {
-        console.log("undoDelete called");
-        console.log("lastDeletedTask:", lastDeletedTask);
-
         if (lastDeletedTask) {
-          const { title, date, element } = lastDeletedTask;
-          console.log(`Restoring task: ${title} - ${date}`);
+          const { title, date, priority, element } = lastDeletedTask;
 
           // Re-add the task to the list
           document.getElementById("list").appendChild(element);
 
           // Add the task back to the calendar
-          addTaskToCalendar(title, date);
+          addTaskToCalendar(title, date, priority);
 
           // Restore the task in local storage
           const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-          tasks.push({ title, start: date, allDay: true });
+          tasks.push({ title, start: date, priority: priority });
           localStorage.setItem('tasks', JSON.stringify(tasks));
 
           // Hide the Undo button and clear the last deleted task
@@ -709,12 +697,15 @@ body.dark-mode #taskPriority {
         }
       }
 
-      function addTaskToCalendar(title, date) {
+      function addTaskToCalendar(title, date, priority) {
         if (calendar) {
           calendar.addEvent({
             title: title,
             start: date,
-            allDay: true
+            allDay: true,
+            extendedProps: {
+              priority: priority
+            }
           });
         }
       }
@@ -746,60 +737,72 @@ body.dark-mode #taskPriority {
         const filteredTasks = tasks.filter(task => task.start === date);
 
         // Add filtered tasks to the list
-        filteredTasks.forEach(task => addTaskToList(task.title, task.start));
+        filteredTasks.forEach(task => addTaskToList(task.title, task.start, task.priority));
       }
 
       // Initialize Calendar with Event Colors
       function initializeCalendar() {
-    const calendarEl = document.getElementById('calendar');
-    if (calendarEl) {
-        calendar = new FullCalendar.Calendar(calendarEl, {
+        const calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+          calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: function(fetchInfo, successCallback, failureCallback) {
-                // Load events from localStorage
-                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                successCallback(tasks);
+              // Load events from localStorage
+              const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+              // Map tasks to events with extendedProps
+              const events = tasks.map(task => {
+                return {
+                  title: task.title,
+                  start: task.start,
+                  extendedProps: {
+                    priority: task.priority
+                  }
+                };
+              });
+              successCallback(events);
             },
             eventContent: function(info) {
-                // Create custom event content with priority tags
-                let eventEl = document.createElement('div');
-                eventEl.style.display = 'flex';
-                eventEl.style.alignItems = 'center';
+              // Create custom event content with priority tags
+              let eventEl = document.createElement('div');
+              eventEl.style.display = 'flex';
+              eventEl.style.alignItems = 'center';
+              eventEl.style.gap = '5px';
 
-                // Priority indicator (colored dot)
-                let priorityIndicator = document.createElement('span');
-                priorityIndicator.style.display = 'inline-block';
-                priorityIndicator.style.width = '10px';
-                priorityIndicator.style.height = '10px';
-                priorityIndicator.style.borderRadius = '50%';
-                priorityIndicator.style.marginRight = '5px';
+              // Priority indicator (colored dot)
+              let priorityIndicator = document.createElement('span');
+              priorityIndicator.style.display = 'inline-block';
+              priorityIndicator.style.width = '10px';
+              priorityIndicator.style.height = '10px';
+              priorityIndicator.style.borderRadius = '50%';
 
-                // Set color based on priority
-                if (info.event.extendedProps.priority === 'high') {
-                    priorityIndicator.style.backgroundColor = '#dc3545'; // Red
-                } else if (info.event.extendedProps.priority === 'medium') {
-                    priorityIndicator.style.backgroundColor = '#ffc107'; // Yellow
-                } else if (info.event.extendedProps.priority === 'low') {
-                    priorityIndicator.style.backgroundColor = '#28a745'; // Green
-                }
+              // Set color based on priority
+              if (info.event.extendedProps.priority === 'high') {
+                priorityIndicator.style.backgroundColor = '#dc3545'; // Red
+              } else if (info.event.extendedProps.priority === 'medium') {
+                priorityIndicator.style.backgroundColor = '#ffc107'; // Yellow
+              } else if (info.event.extendedProps.priority === 'low') {
+                priorityIndicator.style.backgroundColor = '#28a745'; // Green
+              } 
+              // else {
+              //   priorityIndicator.style.backgroundColor = '#6c757d'; // Grey for undefined
+              // }
 
-                // Event title
-                let titleEl = document.createElement('span');
-                titleEl.innerText = info.event.title;
-                titleEl.style.color = 'inherit'; // Keep the default text color
+              // Event title
+              let titleEl = document.createElement('span');
+              titleEl.innerText = info.event.title;
+              titleEl.style.color = 'inherit'; // Keep the default text color
 
-                // Append the indicator and title
-                eventEl.appendChild(priorityIndicator);
-                eventEl.appendChild(titleEl);
+              // Append the indicator and title
+              eventEl.appendChild(priorityIndicator);
+              eventEl.appendChild(titleEl);
 
-                return { domNodes: [eventEl] };
+              return { domNodes: [eventEl] };
             },
-        });
+          });
 
-        calendar.render();
-    }
-}
-
+          calendar.render();
+        }
+      }
 
       function toggleCalendar() {
         const calendarContainer = document.getElementById('calendarContainer');
@@ -813,7 +816,7 @@ body.dark-mode #taskPriority {
           if (!calendar) {
             initializeCalendar();
           } else {
-            calendar.render(); // Re-render if already initialized
+            calendar.render();
           }
         } else {
           // Hide calendar
