@@ -310,68 +310,6 @@
 
         <!-- Timer Script -->
         <script src="timer.js"></script>
-        <!-- <script>
-          let timerInterval;
-          let timerDuration = 0;
-          let remainingTime = 0;
-          let isPaused = true;
-
-          const timerMessage = document.getElementById('timerMessage');
-          const playPauseButton = document.getElementById('play_pause');
-          const alarmSound = document.getElementById('alarmSound');
-
-          function setTimer() {
-            playPauseButton.src = 'green_play.png';
-            clearInterval(timerInterval);
-            const minutes = parseInt(document.getElementById('minutes').value);
-            timerDuration = minutes * 60;
-            remainingTime = timerDuration;
-            isPaused = true;
-            timerMessage.innerText = `Timer set for ${minutes} minutes.`;
-          }
-
-          playPauseButton.addEventListener('click', () => {
-            if (remainingTime > 0) {
-              if (isPaused) {
-                startTimer();
-              } else {
-                pauseTimer();
-              }
-            }
-          });
-
-          function startTimer() {
-            isPaused = false;
-            playPauseButton.src = 'pause.png';
-            timerInterval = setInterval(() => {
-              if (remainingTime > 0) {
-                remainingTime--;
-                displayTime();
-              } else {
-                clearInterval(timerInterval);
-                timerMessage.innerText = "Time's up!";
-                alarmSound.play();
-                isPaused = true;
-                playPauseButton.src = 'green_play.png';
-              }
-            }, 1000);
-          }
-
-          function pauseTimer() {
-            isPaused = true;
-            clearInterval(timerInterval);
-            playPauseButton.src = 'stop.png';
-
-          }
-
-          function displayTime() {
-            playPauseButton.src = 'running_timer.png';
-            const minutes = Math.floor(remainingTime / 60);
-            const seconds = remainingTime % 60;
-            timerMessage.innerText = `Time Remaining: ${minutes}m ${seconds}s`;
-          }
-        </script> -->
-
       </div>
     </div>
   </div>
